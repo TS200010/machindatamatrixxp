@@ -8,10 +8,11 @@
 import Foundation
 
 struct DataMatrix: Identifiable, Codable, Equatable {
-    var id: Int32 { dmCDid } // Use dmCDid as unique identifier
+    var id: Int32 { dmCDid }
     var dmCDid: Int32
     var dateScanned: Date?
     var imageData: Data?
     var rawData: String?
     var upuCountryID: String?
 }
+

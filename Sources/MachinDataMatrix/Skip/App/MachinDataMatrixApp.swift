@@ -12,7 +12,9 @@ let logger: Logger = Logger(subsystem: "ItMk.MachinDataMatrixXP", category: "Mac
 public struct MachinDataMatrixRootView : View {
     
     // MARK: --- Environment
-    let persistenceController: any PersistenceStore = PersistenceController.shared
+    // Pick your backend (Core Data or JSON)
+//    let persistenceController: any PersistenceStore = PersistenceController.shared
+    @StateObject private var storeModel = StoreModel(store: PersistenceController.shared)
     
     public init() {
     }
@@ -22,6 +24,11 @@ public struct MachinDataMatrixRootView : View {
             .task {
                 logger.info("Skip app logs are viewable in the Xcode console for iOS; Android logs can be viewed in Studio or using adb logcat")
             }
+            .environmentObject(storeModel)
+//            .environment( DMSettings() )
+//            .environmentObject( router )
+            
+ //           .if( gViewCheck ) { view in view.border( .yellow )}
     }
 }
 

@@ -15,3 +15,4 @@ protocol PersistenceStore {
     func delete(_ item: Model) async throws
     func deleteAll() async throws
 }
+

@@ -8,18 +8,22 @@
 import Foundation
 
 //#if SKIP
+import Foundation
+
 @MainActor
 final class JSONDataMatrixStore: PersistenceStore {
     typealias Model = DataMatrix
     static let shared = JSONDataMatrixStore()
 
-    private let url: URL
-
-    init() {
-//        let folder = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let folder = URL(fileURLWithPath: "/tmp/JSONStore")
-        url = folder.appendingPathComponent("DataMatrix.json")
+    private var folder: URL {
+        #if !SKIP
+        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        #else
+        URL(fileURLWithPath: "/tmp/JSONStore")
+        #endif
     }
+
+    private var url: URL { folder.appendingPathComponent("DataMatrix.json") }
 
     func fetchAll() async throws -> [DataMatrix] {
         guard FileManager.default.fileExists(atPath: url.path) else { return [] }
@@ -49,5 +53,6 @@ final class JSONDataMatrixStore: PersistenceStore {
         try? FileManager.default.removeItem(at: url)
     }
 }
+
 //#endif
 

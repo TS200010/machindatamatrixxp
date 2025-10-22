@@ -5,14 +5,62 @@
 //  Created by Anthony Stanners on 15/06/2025.
 //
 
+import SwiftUI
+
 @MainActor
 enum PersistenceController {
     #if SKIP
-    static var shared: some PersistenceStore { JSONDataMatrixStore.shared }
+    static let shared: any PersistenceStore = JSONDataMatrixStore.shared
     #else
-    static var shared: some PersistenceStore { CoreDataDataMatrixStore.shared }
+    static let shared: any PersistenceStore = CoreDataDataMatrixStore.shared
     #endif
 }
+
+@MainActor
+final class StoreModel: ObservableObject {
+    let store: any PersistenceStore
+
+    init(store: any PersistenceStore) {
+        self.store = store
+    }
+}
+
+// For previews (if we need it)
+final class DummyPersistenceStore: PersistenceStore {
+    typealias Model = DataMatrix
+
+    func fetchAll() async throws -> [DataMatrix] { [] }
+    func save(_ item: DataMatrix) async throws {}
+    func delete(_ item: DataMatrix) async throws {}
+    func deleteAll() async throws {}
+}
+
+
+//// Simple holder wrapping the dummy
+//final class DummyPersistenceStoreHolder: Sendable {
+//    let store: DummyPersistenceStore
+//    init() { self.store = DummyPersistenceStore() }
+//}
+
+//struct PersistenceStoreKey: EnvironmentKey {
+//    // static default must not reference @MainActor
+//    static let defaultValue = DummyPersistenceStoreHolder()
+//}
+
+//// MARK: - EnvironmentValues extension
+//extension EnvironmentValues {
+//    // Computed property to access the store
+//    var persistenceStore: PersistenceStoreHolder {
+//        get {
+//            // If runtime injection has occurred, return the real store
+//            (self[PersistenceStoreKey.self] as? PersistenceStoreHolder)
+//            ?? PersistenceStoreHolder(store: DummyPersistenceStore())
+//        }
+//        set {
+//            self[PersistenceStoreKey.self] = newValue
+//        }
+//    }
+//}
 
 /*
  import CoreData

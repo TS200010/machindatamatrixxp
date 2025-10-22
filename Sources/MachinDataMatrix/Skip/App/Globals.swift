@@ -13,14 +13,12 @@ import SwiftUI
 @MainActor
 @Observable
 public class GlobalState {
-    
     static let shared = GlobalState()
-    
     var stampsScanned: Int32 = 0
 }
 
+// Helper to access global state easily
 extension View {
-        // Helper to access global state easily
     var globalState: GlobalState {
         GlobalState.shared
     }
