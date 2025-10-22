@@ -2,6 +2,7 @@ import Foundation
 import OSLog
 import SwiftUI
 
+
 /// A logger for the MachinDataMatrix module.
 let logger: Logger = Logger(subsystem: "ItMk.MachinDataMatrixXP", category: "MachinDataMatrix")
 
@@ -9,6 +10,10 @@ let logger: Logger = Logger(subsystem: "ItMk.MachinDataMatrixXP", category: "Mac
 ///
 /// The default implementation merely loads the `ContentView` for the app and logs a message.
 public struct MachinDataMatrixRootView : View {
+    
+    // MARK: --- Environment
+    let persistenceController: any PersistenceStore = PersistenceController.shared
+    
     public init() {
     }
 
