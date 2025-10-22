@@ -12,9 +12,10 @@ let logger: Logger = Logger(subsystem: "ItMk.MachinDataMatrixXP", category: "Mac
 public struct MachinDataMatrixRootView : View {
     
     // MARK: --- Environment
-    // Pick your backend (Core Data or JSON)
-//    let persistenceController: any PersistenceStore = PersistenceController.shared
     @StateObject private var storeModel = StoreModel(store: PersistenceController.shared)
+    
+    // TODO: --- Why does the router need to be an ObservedObject/environmentObject. When I tried to make it @Observable I could not get it to fire.
+    @ObservedObject private var router = Router()
     
     public init() {
     }
@@ -25,8 +26,8 @@ public struct MachinDataMatrixRootView : View {
                 logger.info("Skip app logs are viewable in the Xcode console for iOS; Android logs can be viewed in Studio or using adb logcat")
             }
             .environmentObject(storeModel)
-//            .environment( DMSettings() )
-//            .environmentObject( router )
+            .environment( DMSettings() )
+            .environmentObject( router )
             
  //           .if( gViewCheck ) { view in view.border( .yellow )}
     }

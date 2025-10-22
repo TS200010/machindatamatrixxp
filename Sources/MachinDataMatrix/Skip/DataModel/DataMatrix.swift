@@ -7,8 +7,8 @@
 
 import Foundation
 
-struct DataMatrix: Identifiable, Codable, Equatable {
-    var id: Int32 { dmCDid }
+public struct DataMatrix: Identifiable, Codable, Equatable, Hashable {
+    public var id: Int32 { dmCDid }
     var dmCDid: Int32
     var dateScanned: Date?
     var imageData: Data?
