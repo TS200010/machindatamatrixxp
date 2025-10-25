@@ -206,6 +206,7 @@
     },
     "Hello [%@](https://skip.tools)!" : {
       "comment" : "Welcome tab contents",
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -557,6 +558,9 @@
           }
         }
       }
+    },
+    "WIP [%@](https://skip.tools)!" : {
+
     }
   },
   "version" : "1.0"

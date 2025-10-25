@@ -8,11 +8,12 @@
 import Foundation
 
 public struct DataMatrix: Identifiable, Codable, Equatable, Hashable {
-    public var id: Int32 { dmCDid }
-    var dmCDid: Int32
+    public var id: Int32 { dmID }
+    var dmID: Int32
     var dateScanned: Date?
     var imageData: Data?
     var rawData: String?
     var upuCountryID: String?
 }
+
 

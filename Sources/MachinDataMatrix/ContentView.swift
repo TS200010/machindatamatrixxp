@@ -25,10 +25,10 @@ struct ContentView: View {
             .tabItem { Label("Home", systemImage: "house.fill") }
             .tag(ContentTab.home)
 
-            NavigationStack {
-                SettingsView(appearance: $appearance, welcomeName: $welcomeName)
-                    .navigationTitle("Settings")
-            }
+//            NavigationStack {
+//                SettingsView(appearance: $appearance, welcomeName: $welcomeName)
+//                    .navigationTitle("Settings")
+//            }
             .tabItem { Label("Settings", systemImage: "gearshape.fill") }
             .tag(ContentTab.settings)
         }
@@ -43,7 +43,7 @@ struct WelcomeView : View {
 
     var body: some View {
         VStack(spacing: 0) {
-            Text("Hello [\(welcomeName)](https://skip.tools)!")
+            Text("WIP [\(welcomeName)](https://skip.tools)!")
                 .padding()
             Image(systemName: "heart.fill")
                 .foregroundStyle(.red)
@@ -130,29 +130,29 @@ struct ItemView : View {
     }
 }
 
-struct SettingsView : View {
-    @Binding var appearance: String
-    @Binding var welcomeName: String
-
-    var body: some View {
-        Form {
-            TextField("Name", text: $welcomeName)
-            Picker("Appearance", selection: $appearance) {
-                Text("System").tag("")
-                Text("Light").tag("light")
-                Text("Dark").tag("dark")
-            }
-            if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String,
-               let buildNumber = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
-                Text("Version \(version) (\(buildNumber))")
-            }
-            HStack {
-                PlatformHeartView()
-                Text("Powered by [Skip](https://skip.tools)")
-            }
-        }
-    }
-}
+//struct SettingsView : View {
+//    @Binding var appearance: String
+//    @Binding var welcomeName: String
+//
+//    var body: some View {
+//        Form {
+//            TextField("Name", text: $welcomeName)
+//            Picker("Appearance", selection: $appearance) {
+//                Text("System").tag("")
+//                Text("Light").tag("light")
+//                Text("Dark").tag("dark")
+//            }
+//            if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String,
+//               let buildNumber = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
+//                Text("Version \(version) (\(buildNumber))")
+//            }
+//            HStack {
+//                PlatformHeartView()
+//                Text("Powered by [Skip](https://skip.tools)")
+//            }
+//        }
+//    }
+//}
 
 /// A view that shows a blue heart on iOS and a green heart on Android.
 struct PlatformHeartView : View {

@@ -11,7 +11,9 @@ import CoreData
 
 @MainActor
 final class CoreDataDataMatrixStore: PersistenceStore {
+    
     typealias Model = DataMatrix
+    
     static let shared = CoreDataDataMatrixStore(inMemory: gInMemoryCoreDataStore)
 
     let container: NSPersistentContainer
@@ -33,7 +35,7 @@ final class CoreDataDataMatrixStore: PersistenceStore {
         let results = try container.viewContext.fetch(request)
         return results.map { cd in
             DataMatrix(
-                dmCDid: cd.dmCDid,
+                dmID: cd.dmCDid,
                 dateScanned: cd.dateScanned,
                 imageData: cd.imageData,
                 rawData: cd.rawData,
@@ -45,9 +47,9 @@ final class CoreDataDataMatrixStore: PersistenceStore {
     func save(_ item: DataMatrix) async throws {
         let context = container.viewContext
         let fetch = NSFetchRequest<DataMatrixCD>(entityName: "DataMatrixCD")
-        fetch.predicate = NSPredicate(format: "dmCDid == %d", item.dmCDid)
+        fetch.predicate = NSPredicate(format: "dmCDid == %d", item.dmID)
         let existing = try context.fetch(fetch).first ?? DataMatrixCD(context: context)
-        existing.dmCDid = item.dmCDid
+        existing.dmCDid = item.dmID
         existing.dateScanned = item.dateScanned
         existing.imageData = item.imageData
         existing.rawData = item.rawData
@@ -58,7 +60,7 @@ final class CoreDataDataMatrixStore: PersistenceStore {
     func delete(_ item: DataMatrix) async throws {
         let context = container.viewContext
         let fetch = NSFetchRequest<DataMatrixCD>(entityName: "DataMatrixCD")
-        fetch.predicate = NSPredicate(format: "dmCDid == %d", item.dmCDid)
+        fetch.predicate = NSPredicate(format: "dmCDid == %d", item.dmID)
         if let obj = try context.fetch(fetch).first {
             context.delete(obj)
             try context.save()

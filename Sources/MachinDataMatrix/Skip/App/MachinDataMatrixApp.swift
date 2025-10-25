@@ -12,24 +12,30 @@ let logger: Logger = Logger(subsystem: "ItMk.MachinDataMatrixXP", category: "Mac
 public struct MachinDataMatrixRootView : View {
     
     // MARK: --- Environment
-    @StateObject private var storeModel = StoreModel(store: PersistenceController.shared)
+    @State private var store = DMStore(store: PersistenceController.shared)
+    @State private var dmSettings = DMSettings()
     
     // TODO: --- Why does the router need to be an ObservedObject/environmentObject. When I tried to make it @Observable I could not get it to fire.
     @ObservedObject private var router = Router()
     
-    public init() {
-    }
-
+    // MARK: --- Initialiser
+    public init() { }
+    
+    // MARK: --- Body
     public var body: some View {
-        ContentView()
-            .task {
-                logger.info("Skip app logs are viewable in the Xcode console for iOS; Android logs can be viewed in Studio or using adb logcat")
-            }
-            .environmentObject(storeModel)
-            .environment( DMSettings() )
-            .environmentObject( router )
-            
- //           .if( gViewCheck ) { view in view.border( .yellow )}
+        
+        NavigationStack(path: $router.navPath) {
+            DMMainView()
+                .navigationBarTitleDisplayMode(.inline) // if you want inline titles
+        }
+        .task {
+            logger.info("Skip app logs are viewable in the Xcode console for iOS; Android logs can be viewed in Studio or using adb logcat")
+        }
+        .environment( store )
+        .environment( dmSettings )
+        .environmentObject( router )
+        
+        //           .if( gViewCheck ) { view in view.border( .yellow )}
     }
 }
 

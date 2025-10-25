@@ -33,7 +33,7 @@ final class JSONDataMatrixStore: PersistenceStore {
 
     func save(_ item: DataMatrix) async throws {
         var items = try await fetchAll()
-        if let index = items.firstIndex(where: { $0.dmCDid == item.dmCDid }) {
+        if let index = items.firstIndex(where: { $0.dmID == item.dmID }) {
             items[index] = item
         } else {
             items.append(item)
@@ -44,7 +44,7 @@ final class JSONDataMatrixStore: PersistenceStore {
 
     func delete(_ item: DataMatrix) async throws {
         var items = try await fetchAll()
-        items.removeAll { $0.dmCDid == item.dmCDid }
+        items.removeAll { $0.dmID == item.dmID }
         let data = try JSONEncoder().encode(items)
         try data.write(to: url)
     }

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		453277EB2EAA30DF007D3192 /* CodeScanneriOS in Frameworks */ = {isa = PBXBuildFile; productRef = 453277EA2EAA30DF007D3192 /* CodeScanneriOS */; };
+		4576F8612EA9C4A900975857 /* ItMkLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 4576F8602EA9C4A900975857 /* ItMkLibrary */; };
 		491F27822DA55B72004926EE /* MachinDataMatrix in Frameworks */ = {isa = PBXBuildFile; productRef = 491F27812DA55B72004926EE /* MachinDataMatrix */; };
 		491F27832DA55B72004926EE /* MachinDataMatrix in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 491F27812DA55B72004926EE /* MachinDataMatrix */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		496BDBEE2B8A7E9C00C09264 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 496BDBED2B8A7E9C00C09264 /* Localizable.xcstrings */; };
@@ -48,6 +50,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				491F27822DA55B72004926EE /* MachinDataMatrix in Frameworks */,
+				4576F8612EA9C4A900975857 /* ItMkLibrary in Frameworks */,
+				453277EB2EAA30DF007D3192 /* CodeScanneriOS in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -115,6 +119,8 @@
 			name = "MachinDataMatrix App";
 			packageProductDependencies = (
 				491F27812DA55B72004926EE /* MachinDataMatrix */,
+				4576F8602EA9C4A900975857 /* ItMkLibrary */,
+				453277EA2EAA30DF007D3192 /* CodeScanneriOS */,
 			);
 			productName = App;
 			productReference = 496BDBEB2B89A47800C09264 /* MachinDataMatrix.app */;
@@ -143,6 +149,8 @@
 			);
 			mainGroup = 49F90C1F2A52156200F06D93;
 			packageReferences = (
+				4576F85F2EA9C4A900975857 /* XCRemoteSwiftPackageReference "ItMkLibrary" */,
+				453277E92EAA30DF007D3192 /* XCRemoteSwiftPackageReference "CodeScanneriOS" */,
 			);
 			productRefGroup = 496BDBEC2B89A47800C09264 /* Products */;
 			projectDirPath = "";
@@ -203,6 +211,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 496EB72F2A6AE4DE00C1253B /* MachinDataMatrix.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = 4LBCUZ943J;
 				ENABLE_PREVIEWS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
@@ -213,6 +222,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 496EB72F2A6AE4DE00C1253B /* MachinDataMatrix.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = 4LBCUZ943J;
 				ENABLE_PREVIEWS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
@@ -278,7 +288,36 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		453277E92EAA30DF007D3192 /* XCRemoteSwiftPackageReference "CodeScanneriOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/TS200010/CodeScanneriOS.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+		4576F85F2EA9C4A900975857 /* XCRemoteSwiftPackageReference "ItMkLibrary" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/TS200010/ItMkLibrary";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
+		453277EA2EAA30DF007D3192 /* CodeScanneriOS */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 453277E92EAA30DF007D3192 /* XCRemoteSwiftPackageReference "CodeScanneriOS" */;
+			productName = CodeScanneriOS;
+		};
+		4576F8602EA9C4A900975857 /* ItMkLibrary */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4576F85F2EA9C4A900975857 /* XCRemoteSwiftPackageReference "ItMkLibrary" */;
+			productName = ItMkLibrary;
+		};
 		491F27812DA55B72004926EE /* MachinDataMatrix */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MachinDataMatrix;

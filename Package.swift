@@ -10,6 +10,7 @@ let package = Package(
         .library(name: "MachinDataMatrix", type: .dynamic, targets: ["MachinDataMatrix"]),
     ],
     dependencies: [
+//        .package(url: "https://github.com/TS200010/ItMkLibrary", from: "1.0.0"),
         .package(url: "https://source.skip.tools/skip.git", from: "1.6.16"),
         .package(url: "https://source.skip.tools/skip-ui.git", from: "1.0.0")
     ],
