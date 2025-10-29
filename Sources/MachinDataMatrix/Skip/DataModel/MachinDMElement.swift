@@ -24,6 +24,11 @@ struct MachinDMElement: BCElement, Identifiable
         return elementDescriptor.dmElementType
     }}
     
+    /// Default implementation of the Equatable protocol for BCElement.
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.value == rhs.value
+    }
+    
     func getBCElementDescripton() -> String {
         
         switch elementDescriptor.dmElementType {

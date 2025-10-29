@@ -36,8 +36,8 @@ public final class Router: ObservableObject {
         case settingsView
         case dmScanView
         case dmCameraView
-        case alreadyScannedView ( DataMatrix? )
-        case newlyScannedView ( DataMatrix? )
+        case alreadyScannedView ( Int32 )
+        case newlyScannedView ( Int32 )
 //        case alreadyScannedView ( DataMatrixCD? )
 //        case newlyScannedView ( DataMatrixCD? )
         case notSpecified           // Used in the navigateBack Hack

@@ -10,19 +10,19 @@ import Foundation
 // MARK: --- BCEnum protocols
 /// A type that defines BCEnumProtocol. Each flavour a BarCode is required to have an enum that conforms to this protocol
 ///
-protocol BCEnumProtocol: Hashable {
+public protocol BCEnumProtocol: Hashable {
     
 }
 
 /// A type that requires conforming types to have a BCEnumProtocol as an AssociatedType
-protocol RequiresBCEnumProtocol {
+public protocol RequiresBCEnumProtocol {
     
     associatedtype DMEnum: BCEnumProtocol
 }
 
 
 /// A protocol that defines the structure of a Bar Code Element Descriptor
-protocol BCElementDescriptor {
+public protocol BCElementDescriptor {
 
     var startPos: Int { get set }
     var length: Int { get set }

@@ -8,11 +8,10 @@
 import Foundation
 import Observation
 
-@Observable
-class DMSettings {
+class DMSettings: ObservableObject {
     
-    var showStatusBar: Bool = true
-    var developerMode: Bool = true
+    @Published var showStatusBar: Bool = true
+    @Published var developerMode: Bool = true
     
     func resetSettings() -> Void {
         showStatusBar = true

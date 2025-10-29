@@ -29,19 +29,19 @@ struct TopLevelNavigation: ViewModifier {
                             //                                    //                                DMCameraView( latestScannedObjectID: $latestScannedObjectID )
                             //                            }
                         
-                    case .alreadyScannedView ( let dm ):
-                        if let dm {
-                            SingleRecordView( dmID: dm.dmID, type: .alreadySeen )
-                        } else {
-                            Text("ERROR-10: Restart the App please.")
-                        }
+                    case .alreadyScannedView ( let dmID ):
+//                        if let dmID {
+                            SingleRecordView( dmID: dmID, type: singleRecordViewType.alreadySeen )
+//                        } else {
+//                            Text("ERROR-10: Restart the App please.")
+//                        }
                         
-                    case .newlyScannedView ( let dm ):
-                        if let dm {
-                            SingleRecordView( dmID: dm.dmID, type: .newlySeen )
-                        } else {
-                            Text("ERROR-11: Restart the App please.")
-                        }
+                    case .newlyScannedView ( let dmID ):
+//                        if let dmID {
+                            SingleRecordView( dmID: dmID, type: singleRecordViewType.newlySeen )
+//                        } else {
+//                            Text("ERROR-11: Restart the App please.")
+//                        }
                         
                     case .notSpecified:                         // Used in the navigateBack "Hack"
                         Text("ERROR-01: Restart the App please.")

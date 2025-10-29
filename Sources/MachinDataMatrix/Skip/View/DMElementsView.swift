@@ -11,6 +11,7 @@ struct DMElementsView_UKMachin_S: View {
     
     // MARK: --- Injected
     let elements: [ MachinDMElementType : MachinDMElement ]
+//    let elements = ukMachin.elementDescriptors as? [MachinDMElementType: MachinDMElement] ?? [:]
     
     var body: some View {
         
@@ -65,50 +66,54 @@ struct DMElementsView: View {
     let dmIDToDisplay: Int32
     
     // MARK: --- Environment
-    @Environment(DMStore.self) private var dmStore
+//    @Environment(DMStore.self) private var dmStore
+    @EnvironmentObject var dmStore: DMStore
     
     // MARK: --- State
-    @State private var dmToDisplay: MachinDM? = nil
+    @State private var dmToDisplay: (any BC)? = nil
+    
+    private var dateFormatter: DateFormatter {
+        let df = DateFormatter()
+        df.dateStyle = .medium
+        df.timeStyle = .short
+        return df
+    }
 
     var body: some View {
-        
-//        let dmCDToDisplay = dmStore.fetch(dmID: dmIDToDisplay )
-        
         HStack {
-            
             VStack {
-                
                 if let dmToDisplay {
-                    // Pass the upuCountryID field from the BarCode and turn it into a UPUCountrID enum value
-                    let upuCountryID = UPUCountryIDs.fromString( dmCDToDisplay.upuCountryID ?? "ERROR-02" )
                     
-                    Text("\(upuCountryID.asString())")
+                    // First process fields that are in all BCs
+                    Text("\(dmToDisplay.UPUCountryCode.asString())")
                         .fontWeight(.bold)
                     
-                    
-                    if let rawData = dmCDToDisplay.rawData {
-                        let d = dmCDToDisplay.dateScanned
-                        let s = dmCDToDisplay.dmID
-                        let dateFormatter = Date.FormatStyle(date: .abbreviated, time: .standard)
+//                    if let rawData = dmToDisplay.rawDataCopy {
+                        let d = dmToDisplay.dateScannedCopy
+                        let s = dmToDisplay.dmID
+//                        let dateFormatter = Date.FormatStyle(date: .abbreviated, time: .standard)
+
+
                         
                         HStack {
                             Text("Scanned:")
                                 .font(.caption)
-                            Text( d!, format: dateFormatter )
+//                            Text( d!, format: dateFormatter )
+                            Text(dateFormatter.string(from: d!))
                                 .font(.caption)
                             Text("ID: \(s)")
                                 .font(.caption)
-                        }
+//                        }
                         
-                        Text("\(rawData) (\(rawData.count) chs)")
+                            Text("\(dmToDisplay.rawDataCopy) (\(dmToDisplay.rawDataCopy.count) chs)")
                             .fontWeight(.bold)
                             .font(.caption)
                     }
                     
-                    switch upuCountryID {
+                    switch dmToDisplay.UPUCountryCode {
                         
                     case .UK :
-                        let ukMachin = MachinDM(rawData: dmCDToDisplay.rawData ?? "JGB ERROR-03" )
+                        let ukMachin = MachinDM(rawData: dmToDisplay.rawDataCopy ?? "JGB ERROR-03", dateScanned: dmToDisplay.dateScannedCopy )
                         let elements = ukMachin.elementDescriptors as!  [ MachinDMElementType : MachinDMElement ]
                         
                         // TODO: Check that the elements are not nil before unwrapping
@@ -157,7 +162,7 @@ struct DMElementsView: View {
         .task {
             do {
                 if let fetchedDM = try await dmStore.fetch(dmID: dmIDToDisplay) {
-                    dmToDisplay = fetchedDM
+                    dmToDisplay = fetchedDM as! any BC
                 }
             } catch {
                 print("Failed to fetch DM:", error)

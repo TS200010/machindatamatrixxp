@@ -20,3 +20,4 @@ struct BackGround: View {
         .ignoresSafeArea()
     }
 }
+

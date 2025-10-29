@@ -8,18 +8,45 @@
 import SwiftUI
 
 @MainActor
-@Observable
-final class DMStore {
-
+final class DMStore: ObservableObject {
+     
     let store: any PersistenceStore
     
-    private(set) var allData: [DataMatrix] = []
+    @Published private(set) var allData: [DataMatrix] = []
     
     private var nextSequenceNo: Int32 = 1
     
     init(store: any PersistenceStore) {
         self.store = store
     }
+    
+    // MARK: --- Interpreted Computed Porperty
+    var interpreted: [any BC] {
+        allData.compactMap { interpret($0) }
+    }
+    
+    // MARK: --- Interpret
+    private func interpret(_ dm: DataMatrix) -> (any BC)? {
+        guard let rawData = dm.rawData else { return nil }
+
+        switch detectType(from: rawData) {
+        case .MachinDM:
+            return MachinDM(rawData: rawData, dateScanned: dm.dateScanned )
+        // Future cases can go here, e.g.:
+        // case .XYZType: return XYZDM(rawData: rawData)
+        default:
+            return nil
+        }
+    }
+
+    // MARK: --- DetectType
+    private func detectType(from rawData: String) -> BCType {
+        if rawData.count == MachinDM.totalLen {
+            return .MachinDM
+        }
+        return .undefined
+    }
+
     
     // MARK: --- Refresh
     func refresh() async {
@@ -65,7 +92,7 @@ final class DMStore {
             dateScanned: Date(),
             imageData: imageData,
             rawData: rawData,
-            upuCountryID: String(rawData.prefix(4))
+//            upuCountryID: String(rawData.prefix(4))
         )
         
         nextSequenceNo += 1
@@ -102,8 +129,57 @@ final class DMStore {
     }
 }
 
+// MARK: --- CSV PROCESSING
+extension DMStore {
+    
+    // MARK: --- GenerateCSVUKMachin
+    func generateCSVUKMachin(outputtingRawValues: Bool) -> URL? {
+        guard !allData.isEmpty else { return nil }
 
-// For previews (if we need it)
+        var rows: [String] = []
+        var firstRow = true
+
+        for dmCD in allData {
+            let dm = MachinDM(rawData: dmCD.rawData ?? "", dateScanned: dmCD.dateScanned )
+            let elems = dm.elementDescriptors as! [MachinDMElementType : MachinDMElement]
+
+            if firstRow {
+                let heading = MachinDMElementType.allCases
+                    .map { elems[$0]?.elementDescriptor.description ?? "Error" }
+                    .joined(separator: ", ")
+                rows.append(heading)
+                firstRow = false
+            }
+
+            let row = MachinDMElementType.allCases
+                .map { outputtingRawValues ? (elems[$0]?.value ?? "Error") : (elems[$0]?.getBCElementDescripton() ?? "Error") }
+                .joined(separator: ", ")
+            rows.append(row)
+        }
+
+        let stringData = rows.joined(separator: "\n")
+
+        do {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
+            let dateString = formatter.string(from: Date())
+            let filename = outputtingRawValues
+                ? "DataMatrixUKMachinRaw_\(dateString).csv"
+                : "DataMatrixUKMachin_\(dateString).csv"
+
+            let folder = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+            let fileURL = folder.appendingPathComponent(filename)
+            try stringData.write(to: fileURL, atomically: true, encoding: .utf8)
+            return fileURL
+        } catch {
+            print("Failed to generate CSV: \(error)")
+            return nil
+        }
+    }
+}
+
+
+// MARK: --- For previews (if we need it)
 final class DummyPersistenceStore: PersistenceStore {
 
     typealias Model = DataMatrix

@@ -12,39 +12,55 @@ import ItMkLibrary
 struct DMDetailView: View {
     
     // MARK: --- Environment
-    @Environment( \.managedObjectContext ) private var context
-    
-    
-    // MARK: --- CoreData
-    @FetchRequest(
-        sortDescriptors: [ NSSortDescriptor(key: "dmCDid", ascending: false) ]
-    ) var dataMatrixes: FetchedResults<DataMatrixCD>
+//    @Environment(DMStore.self) private var dmStore
+    @EnvironmentObject var dmStore: DMStore
 
     // MARK: --- The View Body
     var body: some View {
            
         VStack {
             
-            List(dataMatrixes, id:\.self) { dmCD in
+            List(dmStore.allData, id:\.self) { dm in
                 
                 Section {
-                    DMElementsView( dmCDToDisplay: dmCD )
+                    #if !SKIP
+                    DMElementsView( dmIDToDisplay: dm.dmID )
                         .swipeActions( allowsFullSwipe: false) {
                             Button("Delete", role: .destructive){
-                                context.delete( dmCD )
-                                try? context.save()
+                                Task {
+                                    try? await dmStore.delete(dm)
+                                }
                             }
                             .tint(.red)
                         }
+                        .padding(.vertical, 4)
+                        .if(gViewCheck) { view in view.border(Color.red) }
+                    #else
+                    // TODO: Could add a context menu here on Android if it looks better
+                    HStack {
+                        DMElementsView(dmIDToDisplay: dm.dmID)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        
+                        Button(role: .destructive) {
+                            Task {
+                                try? await dmStore.delete(dm)
+                            }
+                        } label: {
+                            Image(systemName: "trash")
+                        }
+                    }
+                    .padding(.vertical, 4)
+                    .if(gViewCheck) { view in view.border(Color.red) }
+                    #endif
                     
                     Button("Add Photo") {
 //                        CameraView(completion: <#T##(Result<PhotoResult, PhotoError>) -> Void#>)
                     }
-                    .buttonStyle( ItMkButton() )
+                    .buttonStyle( ItMkButton( isEnabled: true ) )
                 }
                 .listStyle(.plain)
                 .frame(maxWidth: .infinity, alignment: .center)
-                .if( gViewCheck ) { view in view.border( .red )}
+                .if( gViewCheck ) { view in view.border( Color.red )}
 
             }
             .scrollContentBackground(.hidden)

@@ -54,11 +54,12 @@ struct SingleRecordView: View {
     
     
     // MARK: --- Environment
-    @Environment(DMStore.self) private var dmStore
+//    @Environment(DMStore.self) private var dmStore
+    @EnvironmentObject var dmStore: DMStore
     @EnvironmentObject var router: Router
     @Environment(\.dismiss) var dismiss
     
-    // MARK: ---
+    // MARK: --- State
     @State private var dm: DataMatrix?
     
     var body: some View {
@@ -81,6 +82,7 @@ struct SingleRecordView: View {
                     List( [dm] , id:\.self) { dm in
                         Section {
                             if ReleaseContents.allowScanDeletion {
+                                #if !SKIP
                                 DMElementsView( dmIDToDisplay: dm.dmID )
                                     .swipeActions( allowsFullSwipe: false) {
                                         Button("Delete", role: .destructive){
@@ -90,6 +92,21 @@ struct SingleRecordView: View {
                                         }
                                         .tint(.red)
                                     }
+                                #else
+                                // TODO: Could add a context menu here on Android if it looks better
+                                HStack {
+                                    DMElementsView(dmIDToDisplay: dm.dmID)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                    
+                                    Button(role: .destructive) {
+                                        Task {
+                                            try? await dmStore.delete(dm)
+                                        }
+                                    } label: {
+                                        Image(systemName: "trash")
+                                    }
+                                }
+                                #endif
                             } else {
                                 DMElementsView( dmIDToDisplay: dm.dmID )
                             }
@@ -103,7 +120,7 @@ struct SingleRecordView: View {
         }
         .task {
             // run once when the view appears
-            dm = await dmStore.fetch(dmCDid: dmID)
+            dm = await dmStore.fetch(dmID: dmID)
         }
     }
     

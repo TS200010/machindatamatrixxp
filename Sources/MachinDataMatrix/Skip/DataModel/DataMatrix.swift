@@ -13,7 +13,18 @@ public struct DataMatrix: Identifiable, Codable, Equatable, Hashable {
     var dateScanned: Date?
     var imageData: Data?
     var rawData: String?
-    var upuCountryID: String?
 }
 
+extension DataMatrix {
+    
+    var upuCountryID: String? {
+        guard let raw = rawData, raw.count >= 4 else { return nil }
+        return String(raw.prefix(4))
+    }
+    
+    var upuCountryEnum: UPUCountryIDs {
+        guard let code = upuCountryID else { return .noUPUCountryID }
+        return UPUCountryIDs.fromString(code)
+    }
+}
 

@@ -12,8 +12,9 @@ import ItMkLibrary
 
 // TODO: THere is a lot of magic number processing in here - needs a thorough test set.
 
-@objc enum UPUCountryIDs: Int32, HasStringRepresentation {
-    func rawValueAsString() -> String {
+@objc public enum UPUCountryIDs: Int32, HasStringRepresentation {
+    
+    public func rawValueAsString() -> String {
         return "Need to implement this"
     }
     
@@ -62,7 +63,7 @@ import ItMkLibrary
     
 }
 
-
+// TODO: --- Implementation needed
 @objc enum InformationTypeIDs: Int32, HasStringRepresentation {
     func rawValueAsString() -> String {
         return "Need to implement this"

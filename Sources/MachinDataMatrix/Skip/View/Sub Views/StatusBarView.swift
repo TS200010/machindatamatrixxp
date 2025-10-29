@@ -13,7 +13,8 @@ import SwiftUI
 struct StatusBarView: View {
     
     // MARK: --- Environment
-    @Environment( DMSettings.self ) private var dmSettings
+//    @Environment( DMSettings.self ) private var dmSettings
+    @EnvironmentObject private var dmSettings: DMSettings
     
     // MARK: --- Global State
     @State private var globalState = GlobalState.shared

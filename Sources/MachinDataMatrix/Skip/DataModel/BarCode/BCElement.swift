@@ -10,7 +10,7 @@ import ItMkLibrary
 
 
 /// A type that represents a single Element of a BarCode.
-protocol BCElement : Equatable {
+public protocol BCElement : Equatable {
     
     /// The type of the Descriptor that defines the properties this Element.
     associatedtype T: BCElementDescriptor
@@ -31,11 +31,11 @@ protocol BCElement : Equatable {
 
 
 // MARK: --- Equatable Conformance
-extension BCElement {
-    
-    /// Default implementation of the Equatable protocol for BCElement.
-    static func == (lhs: Self, rhs: Self) -> Bool {
-        lhs.value == rhs.value
-    }
-}
+//extension BCElement {
+//    
+//    /// Default implementation of the Equatable protocol for BCElement.
+//    static func == (lhs: Self, rhs: Self) -> Bool {
+//        lhs.value == rhs.value
+//    }
+//}
 

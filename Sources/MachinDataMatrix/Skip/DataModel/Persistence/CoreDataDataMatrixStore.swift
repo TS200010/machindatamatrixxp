@@ -39,7 +39,7 @@ final class CoreDataDataMatrixStore: PersistenceStore {
                 dateScanned: cd.dateScanned,
                 imageData: cd.imageData,
                 rawData: cd.rawData,
-                upuCountryID: cd.upuCountryID
+//                upuCountryID: cd.upuCountryID
             )
         }
     }
@@ -53,7 +53,7 @@ final class CoreDataDataMatrixStore: PersistenceStore {
         existing.dateScanned = item.dateScanned
         existing.imageData = item.imageData
         existing.rawData = item.rawData
-        existing.upuCountryID = item.upuCountryID
+//        existing.upuCountryID = item.upuCountryID
         try context.save()
     }
 

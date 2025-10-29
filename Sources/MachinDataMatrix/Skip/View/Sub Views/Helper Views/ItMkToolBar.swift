@@ -50,7 +50,7 @@ struct ItMkToolbarTools: ToolbarContent {
                     }
                 )
                 .foregroundColor( Color(UIColor.textBlue) )
-                .if( true ) { view in view.border( .red ) }
+                .if( true ) { view in view.border( Color.red ) }
             }
         }
  

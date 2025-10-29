@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		453277EB2EAA30DF007D3192 /* CodeScanneriOS in Frameworks */ = {isa = PBXBuildFile; productRef = 453277EA2EAA30DF007D3192 /* CodeScanneriOS */; };
-		4576F8612EA9C4A900975857 /* ItMkLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 4576F8602EA9C4A900975857 /* ItMkLibrary */; };
+		4590D7A92EB0A33A00D96A1F /* ItMkLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 4590D7A82EB0A33A00D96A1F /* ItMkLibrary */; };
 		491F27822DA55B72004926EE /* MachinDataMatrix in Frameworks */ = {isa = PBXBuildFile; productRef = 491F27812DA55B72004926EE /* MachinDataMatrix */; };
 		491F27832DA55B72004926EE /* MachinDataMatrix in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 491F27812DA55B72004926EE /* MachinDataMatrix */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		496BDBEE2B8A7E9C00C09264 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 496BDBED2B8A7E9C00C09264 /* Localizable.xcstrings */; };
@@ -50,8 +50,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				491F27822DA55B72004926EE /* MachinDataMatrix in Frameworks */,
-				4576F8612EA9C4A900975857 /* ItMkLibrary in Frameworks */,
 				453277EB2EAA30DF007D3192 /* CodeScanneriOS in Frameworks */,
+				4590D7A92EB0A33A00D96A1F /* ItMkLibrary in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -115,12 +115,14 @@
 			buildRules = (
 			);
 			dependencies = (
+				4590D7AD2EB0A59400D96A1F /* PBXTargetDependency */,
+				4590D7AB2EB0A4DF00D96A1F /* PBXTargetDependency */,
 			);
 			name = "MachinDataMatrix App";
 			packageProductDependencies = (
 				491F27812DA55B72004926EE /* MachinDataMatrix */,
-				4576F8602EA9C4A900975857 /* ItMkLibrary */,
 				453277EA2EAA30DF007D3192 /* CodeScanneriOS */,
+				4590D7A82EB0A33A00D96A1F /* ItMkLibrary */,
 			);
 			productName = App;
 			productReference = 496BDBEB2B89A47800C09264 /* MachinDataMatrix.app */;
@@ -149,8 +151,8 @@
 			);
 			mainGroup = 49F90C1F2A52156200F06D93;
 			packageReferences = (
-				4576F85F2EA9C4A900975857 /* XCRemoteSwiftPackageReference "ItMkLibrary" */,
 				453277E92EAA30DF007D3192 /* XCRemoteSwiftPackageReference "CodeScanneriOS" */,
+				4590D7A72EB0A33A00D96A1F /* XCRemoteSwiftPackageReference "ItMkLibrary" */,
 			);
 			productRefGroup = 496BDBEC2B89A47800C09264 /* Products */;
 			projectDirPath = "";
@@ -205,6 +207,17 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4590D7AB2EB0A4DF00D96A1F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 4590D7AA2EB0A4DF00D96A1F /* ItMkLibrary */;
+		};
+		4590D7AD2EB0A59400D96A1F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 4590D7AC2EB0A59400D96A1F /* CodeScanneriOS */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		499CD4422AC5B799001AE8D8 /* Debug */ = {
@@ -297,7 +310,7 @@
 				kind = branch;
 			};
 		};
-		4576F85F2EA9C4A900975857 /* XCRemoteSwiftPackageReference "ItMkLibrary" */ = {
+		4590D7A72EB0A33A00D96A1F /* XCRemoteSwiftPackageReference "ItMkLibrary" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/TS200010/ItMkLibrary";
 			requirement = {
@@ -313,10 +326,20 @@
 			package = 453277E92EAA30DF007D3192 /* XCRemoteSwiftPackageReference "CodeScanneriOS" */;
 			productName = CodeScanneriOS;
 		};
-		4576F8602EA9C4A900975857 /* ItMkLibrary */ = {
+		4590D7A82EB0A33A00D96A1F /* ItMkLibrary */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4576F85F2EA9C4A900975857 /* XCRemoteSwiftPackageReference "ItMkLibrary" */;
+			package = 4590D7A72EB0A33A00D96A1F /* XCRemoteSwiftPackageReference "ItMkLibrary" */;
 			productName = ItMkLibrary;
+		};
+		4590D7AA2EB0A4DF00D96A1F /* ItMkLibrary */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4590D7A72EB0A33A00D96A1F /* XCRemoteSwiftPackageReference "ItMkLibrary" */;
+			productName = ItMkLibrary;
+		};
+		4590D7AC2EB0A59400D96A1F /* CodeScanneriOS */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 453277E92EAA30DF007D3192 /* XCRemoteSwiftPackageReference "CodeScanneriOS" */;
+			productName = CodeScanneriOS;
 		};
 		491F27812DA55B72004926EE /* MachinDataMatrix */ = {
 			isa = XCSwiftPackageProductDependency;

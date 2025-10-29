@@ -6,105 +6,106 @@
 //
 
 import SwiftUI
-import CoreData
 import ItMkLibrary
 //import CodeScanneriOS
-
-
-// let persistenceController = PersistenceController.shared
 
 struct DMMainView: View {
     
     // MARK: --- Environment
-    @Environment(DMStore.self) private var dmStore
-    @EnvironmentObject var router: Router
+//    @Environment(DMStore.self) private var dmStore
 //    @EnvironmentObject var cameraModel: CameraDataModel
-    @Environment( DMSettings.self ) private var dmSettings
+//    @Environment( DMSettings.self ) private var dmSettings
+    @EnvironmentObject var dmStore: DMStore
+    @EnvironmentObject var router: Router
+    @EnvironmentObject var dmSettings: DMSettings
     
     
     // MARK: --- Local State
 //    @State var cameraIsShowing: Bool = false
-    
-    
-    // MARK: --- CoreData
-    @FetchRequest(
-        sortDescriptors: []
-    ) var dataMatrixes: FetchedResults<DataMatrixCD>
-    
+    @State private var csvGeneratedURL: URL? = nil
+    @State private var showCSVAlert: Bool = false
     
     // MARK: --- Helpers
-    private func _generateCSVUKMachin( ouputtingRawValues: Bool ) -> URL {
-        
-        var fileURL: URL!
-        var rows: [ String ] = []
-        var firstRow = true
-        var heading: String = ""
-        for dmCD in dataMatrixes {
-            let dm = MachinDM(rawData: dmCD.rawData ?? "" )
-            let elems = dm.elementDescriptors as! [ MachinDMElementType : MachinDMElement ]
-            
-            if firstRow {
-                for elem in MachinDMElementType.allCases {
-                    if heading != "" {
-                        heading += ", "
-                    }
-                    heading += elems[ elem ]?.elementDescriptor.description ?? "Error"
-                }
-                rows.append( heading )
-                firstRow = false
-            }
-
-            var rowWIP: String = ""
-            
-            for elem in MachinDMElementType.allCases {
-                if rowWIP != "" {
-                    rowWIP += ", "
-                }
-                if ouputtingRawValues {
-                    rowWIP += elems[ elem ]?.value ?? "Error"
-                } else {
-                    rowWIP += elems[ elem ]?.getBCElementDescripton() ?? "Error"
-                }
-            }
-            
-            rows.append( rowWIP )
-        }
-        
-        print(rows)
-
-        // rows to string data
-        let stringData = rows.joined(separator: "\n")
-        
-        do {
-            
-            let filename = {
-                let formatter = DateFormatter()
-                formatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
-                let dateString = formatter.string(from: Date())
-                if ouputtingRawValues {
-                    return "DataMatrixUKMachinRaw_\(dateString).csv"
-                } else {
-                    return "DataMatrixUKMachin_\(dateString).csv"
-                }
-            }()
-            
-            let path = try FileManager.default.url(for: .documentDirectory,
-                                                   in: .allDomainsMask,
-                                                   appropriateFor: nil,
-                                                   create: false)
-            
-//            fileURL = path.appendingPathComponent("DataMatrixUKMachin.csv")
-            fileURL = path.appendingPathComponent( filename)
-            
-            // append string data to file
-            try stringData.write(to: fileURL, atomically: true , encoding: .utf8)
-            print(fileURL!)
-            
-        } catch {
-            print("error generating csv file")
-        }
-        return fileURL
-    }
+//    private func _generateCSVUKMachin( ouputtingRawValues: Bool ) -> URL {
+//        
+//        if dmStore.allData.isEmpty {
+//            print("No data to export")
+//            // create a dummy file URL anyway, e.g., temporary file
+//            let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent("NoData.csv")
+//            try? "".write(to: tempURL, atomically: true, encoding: .utf8)
+//            return tempURL
+//        }
+//        
+//        var fileURL: URL!
+//        var rows: [ String ] = []
+//        var firstRow = true
+//        var heading: String = ""
+//        for dmCD in dmStore.allData {
+//            let dm = MachinDM(rawData: dmCD.rawData ?? "" )
+//            let elems = dm.elementDescriptors as! [ MachinDMElementType : MachinDMElement ]
+//            
+//            if firstRow {
+//                for elem in MachinDMElementType.allCases {
+//                    if heading != "" {
+//                        heading += ", "
+//                    }
+//                    heading += elems[ elem ]?.elementDescriptor.description ?? "Error"
+//                }
+//                rows.append( heading )
+//                firstRow = false
+//            }
+//
+//            var rowWIP: String = ""
+//            
+//            for elem in MachinDMElementType.allCases {
+//                if rowWIP != "" {
+//                    rowWIP += ", "
+//                }
+//                if ouputtingRawValues {
+//                    rowWIP += elems[ elem ]?.value ?? "Error"
+//                } else {
+//                    rowWIP += elems[ elem ]?.getBCElementDescripton() ?? "Error"
+//                }
+//            }
+//            
+//            rows.append( rowWIP )
+//        }
+//        
+//        print(rows)
+//
+//        // rows to string data
+//        let stringData = rows.joined(separator: "\n")
+//        
+//        do {
+//            
+//            let filename = {
+//                let formatter = DateFormatter()
+//                formatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
+//                let dateString = formatter.string(from: Date())
+//                if ouputtingRawValues {
+//                    return "DataMatrixUKMachinRaw_\(dateString).csv"
+//                } else {
+//                    return "DataMatrixUKMachin_\(dateString).csv"
+//                }
+//            }()
+//            
+//            let path = try FileManager.default.url(for: .documentDirectory,
+//                                                   in: .allDomainsMask,
+//                                                   appropriateFor: nil,
+//                                                   create: false)
+//            
+////            fileURL = path.appendingPathComponent("DataMatrixUKMachin.csv")
+//            fileURL = path.appendingPathComponent( filename)
+//            
+//            // append string data to file
+//            try stringData.write(to: fileURL, atomically: true , encoding: .utf8)
+//            print(fileURL!)
+//            
+//        } catch {
+//            print("error generating csv file")
+//        }
+//        return fileURL
+//    }
 
     
     var body: some View {
@@ -140,21 +141,28 @@ struct DMMainView: View {
                         
                         Button("CSV") {
                             // TODO: --- Show Modal Dialog with the filename
-                            let generatedGileURL = _generateCSVUKMachin(ouputtingRawValues: false)
+                            let generatedFileURL = dmStore.generateCSVUKMachin(outputtingRawValues: false)
+                            csvGeneratedURL = generatedFileURL
+                            showCSVAlert = true
+                            if let generatedFileURL = generatedFileURL {
+                                print("CSV generated at \(generatedFileURL)")
+                            }
                         }
                         .buttonStyle( ItMkButton() )
-                            // TODO: Only enable when there is something to output
-                            //                    .disabled(dataMatrixes.count == 0)
+                        .disabled(dmStore.allData.isEmpty)
                         
                         Button("CSV Raw") {
                             // TODO: --- Show Modal Dialog with the filename
-                            let generatedGileURL = _generateCSVUKMachin(ouputtingRawValues: true)
+                            let generatedFileURL = dmStore.generateCSVUKMachin(outputtingRawValues: true)
+                            csvGeneratedURL = generatedFileURL
+                            showCSVAlert = true
+                            if let generatedFileURL = generatedFileURL {
+                                print("CSV Raw generated at \(generatedFileURL)")
+                            }
                         }
                         .buttonStyle( ItMkButton() )
-                            // TODO: Only enable when there is something to output
-                            //                    .disabled(dataMatrixes.count == 0)
+                        .disabled(dmStore.allData.isEmpty)
                     }
-                    
                 }
                 
                 if ReleaseContents.listOfScans {
@@ -179,11 +187,19 @@ struct DMMainView: View {
                     }
                 }
             }
-        } 
+        }
+        .alert("CSV Generated", isPresented: $showCSVAlert, actions: {
+            Button("OK", role: .cancel) {}
+        }, message: {
+            if let url = csvGeneratedURL {
+                Text(url.lastPathComponent)
+            } else {
+                Text("No file could be generated")
+            }
+        })
     }
 }
     
-
 #Preview {
     DMMainView()
 }

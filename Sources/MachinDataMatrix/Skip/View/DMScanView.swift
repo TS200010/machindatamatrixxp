@@ -75,8 +75,9 @@ struct DMScanView: View {
     
     
         // MARK: --- Environment
-    @Environment(DMStore.self) private var dmStore
-    @Environment( \.dismiss ) var dismiss
+//    @Environment(DMStore.self) private var dmStore
+//    @Environment( \.dismiss ) var dismiss
+    @EnvironmentObject var dmStore: DMStore
     @EnvironmentObject var router: Router
     
         // MARK: --- Global State
@@ -87,12 +88,12 @@ struct DMScanView: View {
     
     
         // MARK: --- CoreData
-    @FetchRequest(
-        // TODO: --- Sort in ascending sequence order
-        sortDescriptors: [NSSortDescriptor(keyPath: \DataMatrixCD.dmCDid, ascending: false) ]
-    ) var dmRecords: FetchedResults<DataMatrixCD>
-    
-    
+//    @FetchRequest(
+//        // TODO: --- Sort in ascending sequence order
+//        sortDescriptors: [NSSortDescriptor(keyPath: \DataMatrixCD.dmCDid, ascending: false) ]
+//    ) var dmRecords: FetchedResults<DataMatrixCD>
+//    
+//    
     var body: some View {
         
         ZStack {
@@ -121,10 +122,9 @@ struct DMScanView: View {
         case .success(let result):
             
             let details = result.string.components(separatedBy: "\n")
-            let image = result.image
-            let corners = result.corners
-            
-            let bounds = result.bounds
+//            let image = result.image
+//            let corners = result.corners
+//            let bounds = result.bounds
             
             // TODO: Handle the Try? properly
             // If there is more than one result, we ignore all but the first
@@ -137,37 +137,39 @@ struct DMScanView: View {
             //                corners: corners,
             //                bounds: bounds )
             
-            print(details[0]._guts)
-            let a:_StringGuts = details[0]._guts
-            print(a)
-            
-            print(details[0].count)
+//            print(details[0]._guts)
+//            let a:_StringGuts = details[0]._guts
+//            print(a)
+//            print(details[0].count)
             
             switch result {
                 
             case .success( let newDataMatrix ):
                 if let newDataMatrix {
                     router.navigateBack() // Pops DMScanView (which is now blank as the camera has gone)
-                    router.navigate(to: .newlyScannedView( newDataMatrixCD ))
+                    router.navigate(to: .newlyScannedView( newDataMatrix.dmID ))
                 }
                 
             case .failure( let error ):
                 switch error {
                     
-                case .dmAlreadyScanned (let dm):
+                case .alreadyScanned (let dm):
                     router.navigateBack() // Pops DMScanView (which is now blank as the camera has gone)
                     router.navigate(to: .alreadyScannedView( dm ))
                     break
-                    
-                case .ERROR_07:
-                    assert( false )
-                    break
-                    
-                case .ERROR_09:
-                    assert( false )
-                    break
+//                    
+//                case .ERROR_07:
+//                    assert( false )
+//                    break
+//                    
+//                case .ERROR_09:
+//                    assert( false )
+//                    break
                     
                 }
+            case nil:
+                // nil returned should never happen
+                assertionFailure("Unexpected nil result in switch")
             }
             
         case .failure(_):

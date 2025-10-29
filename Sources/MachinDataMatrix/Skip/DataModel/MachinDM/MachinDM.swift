@@ -7,41 +7,53 @@
 
 import Foundation
 
-
     /// A Type that represents a Machin DataMatrix code
-struct MachinDM : BC {
+public struct MachinDM : BC {
 
+    // MARK: --- BC Conformance
     
-    // MARK: --- DM Conformance
+    public var dmID: Int32?
   
     static let visiblyIdenticalFields: [ MachinDMElementType ] = [.productType, .stampType, .classXXX, .value ]
     
-    var rawData: String = ""
+    public var rawDataCopy: String = ""
     
-    var BCType: BCType  = .MachinDM
+    public var dateScannedCopy: Date? = Date()
     
-    var UPUCountryID: (any BCElement)? = nil
+    public var bcType: BCType  = .MachinDM
     
-    var elementDescriptors: [ AnyHashable  :  any BCElement ]  = [ : ]
+    public var UPUCountryID: UPUCountryIDs? = nil
     
-    init() {
-        self.rawData = ""
-        self.BCType = .MachinDM
+    public var elementDescriptors: [ AnyHashable  :  any BCElement ]  = [ : ]
+    
+    public init() {
+        self.dmID = nil
+        self.rawDataCopy = ""
+        self.dateScannedCopy = Date()
+        self.bcType = .MachinDM
         self.elementDescriptors = [:]
-        self.UPUCountryID = nil
+//        self.UPUCountryID = nil
     }
 
     
-    init( rawData: String ) {
+    init( rawData: String, dateScanned: Date? ) {
         
         guard rawData != "" else {
             return
         }
         
-        self.rawData = rawData
+        // Validate length to prevent out-of-bounds access
+        guard rawData.count == MachinDM.totalLen else {
+            print("Warning: rawData length (\(rawData.count)) does not match expected totalLen (\(MachinDM.totalLen)). Parsing aborted.")
+            return
+        }
         
-        self.UPUCountryID = MachinDMElement(elementDescriptor: MachinDM.UPUCountryIDDescr,
-                                       value: getElementValue(using: MachinDM.UPUCountryIDDescr))
+        self.rawDataCopy = rawData
+        
+        self.dateScannedCopy = dateScanned
+        
+        // Note we assume here that we are dealing with the FIRST characters.
+        self.UPUCountryID = UPUCountryIDs.fromString(String(rawData.prefix( MachinDM.UPUCountryIDLen )))
         
         self.elementDescriptors = [
             
@@ -91,16 +103,20 @@ struct MachinDM : BC {
 /// A funtion that returns true if the the supplied DM
         /// - Parameter dmIn: the DM to be compared against
         /// - Returns: true if the DM supplied is visually identical to self
-    func isVisiblyIdentical( to dmIn: any BC ) -> Bool {
-        
-        // Casts that make the following code easier to read
-        let lhs = self.elementDescriptors as! [ MachinDMElementType : MachinDMElement ]
-        let rhs = dmIn.elementDescriptors as! [ MachinDMElementType : MachinDMElement ]
-        
-        let b = MachinDM.visiblyIdenticalFields.allSatisfy() { lhs[ $0 ] == rhs[ $0 ] }
-        return b
+    /// func isVisiblyIdentical(to dmIn: any BC) -> Bool {
+    
+    public func isVisiblyIdentical( to dmIn: any BC ) -> Bool {
+        // Safe casts to avoid runtime crashes
+        guard let lhs = self.elementDescriptors as? [MachinDMElementType : MachinDMElement],
+              let rhs = dmIn.elementDescriptors as? [MachinDMElementType : MachinDMElement] else {
+            return false
+        }
+        return MachinDM.visiblyIdenticalFields.allSatisfy { lhs[$0] == rhs[$0] }
     }
     
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.rawDataCopy == rhs.rawDataCopy
+    }
     
     // MARK: --- Fields unique to Machin DataMatrixes (MDMs)
     static let UPUCountryIDLen = 4

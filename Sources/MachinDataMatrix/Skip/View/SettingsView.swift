@@ -11,11 +11,12 @@ import ItMkLibrary
 import CoreData
 
 struct SettingsView: View {
-    
-    @Environment(\.managedObjectContext) var context
+    #if !SKIP
     @Environment(\.isPresented) var isPresented
-    @Environment( DMSettings.self ) var dmSettings
+    #endif
+//    @Environment( DMSettings.self ) var dmSettings
     @EnvironmentObject var router: Router
+    @EnvironmentObject var dmSettings: DMSettings
     
     let homePageURL = URL(string: "https://www.ncr.com")!
     let defaultURL  = URL(string: "https://www.google.com")!
@@ -37,24 +38,28 @@ struct SettingsView: View {
                 
                 applicationInformation
             }
-            .foregroundColor(.textBlue)
+            .foregroundColor(Color(UIColor.textBlue))
             .scrollContentBackground(.hidden)
             .navigationTitle("Settings")
-        } .onChange(of: isPresented) {
+        }
+        #if !SKIP
+        .onChange(of: isPresented) {
             if !isPresented {
                 router.navigateBack( from: .settingsView )
             }
         }
-//        .navigationBarHidden(true)
-        // TODO: Why do we need our own back button here?
-//        .navigationBarBackButtonHidden( true )
-//        .toolbar {
-//            ToolbarItem (placement: .topBarLeading) {
-//                Button("<Back") {
-//                    router.navigateBack( from: .settingsView )
-//                } .foregroundColor(.textBlue )
-//            }
-//        }
+        #else
+        .navigationBarHidden(true)
+         // TODO: Why do we need our own back button here?
+        .navigationBarBackButtonHidden( true )
+        .toolbar {
+            ToolbarItem (placement: .topBarLeading) {
+                Button("<Back") {
+                    router.navigateBack( from: .settingsView )
+                } .foregroundColor(.textBlue )
+            }
+        }
+        #endif
     }
 }
 
@@ -62,7 +67,8 @@ extension SettingsView {
     
     @ViewBuilder private var settings: some View {
         
-        @Bindable var dmSettings = dmSettings
+//        @Bindable var dmSettings = dmSettings
+        @EnvironmentObject var dmSettings: DMSettings
         
         Section( header: Text("Adjustable Settings")) {
             
@@ -94,7 +100,7 @@ extension SettingsView {
                 Text("A program to scan and interpret DataMatrix barcodes on stamps. Currently British Machin Stamps are supported.")
                     .font(.caption2)
                     .fontWeight(.medium)
-                    .foregroundColor( .textBlue )
+                    .foregroundColor(Color(UIColor.textBlue))
             }
             .padding( .vertical )
 
@@ -160,7 +166,7 @@ struct settingLineView: View {
                         .foregroundColor( color )
                     Text( title )
                         .font(.callout)
-                        .foregroundColor( .textBlue )
+                        .foregroundColor(Color(UIColor.textBlue))
                 
                 Spacer()
                 

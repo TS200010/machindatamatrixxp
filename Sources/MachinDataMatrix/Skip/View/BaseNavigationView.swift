@@ -37,7 +37,7 @@ struct BaseNavigationView<Content: View> : View {
                     .ignoresSafeArea()
                 
             }
-            .if( gViewCheck ) { view in view.border( .green ) }
+            .if( gViewCheck ) { view in view.border( Color.green ) }
             .foregroundColor( Color(UIColor.textBlue) )
             .ItMkToolbar( title: title )
 
